@@ -14,6 +14,7 @@ LiquidCrystal lcd(9, 8, 5, 4, 3, 2);
 int LCDContrast = 10;
 int potensio = A2;
 int buzzer = A1;
+int LEDmerah = 6;
 
 //digital
 int button = 12;
@@ -29,6 +30,7 @@ bool status = false;
 bool statusPressed = false;
 
 void setup(){
+  pinMode(LEDmerah, OUTPUT);
   pinMode(LCDContrast, OUTPUT);
   pinMode(buzzer, OUTPUT);
   pinMode(potensio, INPUT);
@@ -133,17 +135,9 @@ void kasusDua(){
   int listenerData;
   Serial.println("alamat\tnilai");
   for (int i = 0; i <= 512; i++) {
-    
     listenerData = EEPROM.read(i);
-    lcd.setCursor(0, 0);
-    lcd.print("ALAMAT:");
-    lcd.setCursor(7, 0);
-    lcd.print(i);
-    lcd.setCursor(0, 1);
-    lcd.print("NILAI:");
-    lcd.setCursor(6, 1);
-    lcd.print(listenerData);
-       
+    analogWrite(LEDmerah, listenerData);
+    
     Serial.print(i);
     Serial.print("\t");
     Serial.println(listenerData);
@@ -153,8 +147,6 @@ void kasusDua(){
 //prosedur untuk button dipencet 3x
 void kasusTiga(){
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Hapus Data");
   for (int i = 0; i <= 512; i++){
   	EEPROM.write(i, 0);
   }
@@ -162,8 +154,6 @@ void kasusTiga(){
   analogWrite(buzzer, 255);
   delay(2000);
   analogWrite(buzzer, 0);
-  lcd.setCursor(0, 0);
-  lcd.print("Hapus Selesai");
   delay(1000);
 
 }
@@ -171,9 +161,7 @@ void kasusTiga(){
 //prosedur untuk button dipencet 4x
 void kasusEmpat(){
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Data Tlh Dihapus");
-  
+ 
   int listenerData;
   Serial.println("alamat\tdata");
   for (int i = 0; i <= 512; i++){
